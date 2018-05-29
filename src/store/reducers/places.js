@@ -13,7 +13,7 @@ const reducer = (state = initialState, action) => {
                     key: Math.random() + '',
                     name: action.placeName,
                     image: {
-                        uri: 'https://images.pexels.com/photos/86243/pexels-photo-86243.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
+                        uri: 'https://media-cdn.tripadvisor.com/media/photo-s/11/33/b5/8c/place-aux-merveilles.jpg'
                     }
                 })
             };
