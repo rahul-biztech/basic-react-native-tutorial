@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, StyleSheet } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, Platform } from 'react-native';
+
+import SideDrawerButton from './SideDrawerButton';
+
 
 class SideDrawer extends Component {
 
@@ -8,14 +11,27 @@ class SideDrawer extends Component {
         console.log("rv911: Side Drawer width: " + width);
     }
 
-    // <View style={[styles.container,
-    //     { width: Dimensions.get('window').width * 1 }]}>
+    onSignoutClickListener = () => {
+        alert('Button clicked!')
+    }
 
     render() {
         return (
-            <View style={[styles.container,
-            { width: Dimensions.get('window').width * 0.8 }]}>
-                <Text>SideDrawer</Text>
+            <View 
+                style={[
+                    styles.container,
+                    { width: Dimensions.get('window').width * 0.8 }
+                ]}>
+
+                <SideDrawerButton
+                    icon={Platform.OS === 'android' ? 'md-log-out' : 'ios-log-out'}
+                    onButtonClick={this.onSignoutClickListener}>
+                    Sign Out</SideDrawerButton>
+
+                <SideDrawerButton
+                    icon={Platform.OS === 'android' ? 'md-help-circle' : 'ios-help-circle'}
+                    onButtonClick={this.onSignoutClickListener}>
+                    Help</SideDrawerButton>
             </View>
         );
     }
