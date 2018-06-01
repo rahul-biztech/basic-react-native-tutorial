@@ -43,6 +43,12 @@ const startTabs = () => {
                     }
                 }
             ],
+            tabsStyle:{
+                tabBarSelectedButtonColor: 'orange'
+            },
+            appStyle:{
+                tabBarSelectedButtonColor: 'orange'
+            },
             drawer: {
                 left: {
                     screen: 'com.rahul.SideDrawer',
