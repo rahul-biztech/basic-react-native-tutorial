@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { connect } from 'react-redux';
 
 import { selectPlace } from '../../store/actions/index';
@@ -12,14 +12,19 @@ class FindPlaceScreen extends Component {
         navBarButtonColor: 'orange'
     }
 
-    constructor(props){
+    state = {
+        hasPlaces: false,
+        removeAnim: new Animated.Value(1)
+    }
+
+    constructor(props) {
         super(props);
         this.props.navigator.setOnNavigatorEvent(this._onNavigatorEvent);
     }
 
     _onNavigatorEvent = (event) => {
-        if(event.type === 'NavBarButtonPress') {
-            if(event.id === 'sideDrawerToggle'){
+        if (event.type === 'NavBarButtonPress') {
+            if (event.id === 'sideDrawerToggle') {
                 this.props.navigator.toggleDrawer({
                     side: 'left'
                 })
@@ -36,21 +41,77 @@ class FindPlaceScreen extends Component {
             screen: 'com.rahul.PlaceDetailScreen',
             title: selPlace.name,
             passProps: {
-                selectedPlace: selPlace 
+                selectedPlace: selPlace
             }
         });
     };
 
+    onSearchButtonClick = () => {
+        // this.setState({
+        //     hasPlaces: true
+        // });
+        Animated.timing(this.state.removeAnim, {
+            toValue: 0,
+            duration: 500,
+            useNativeDriver: true
+        }).start();
+    };
+
     render() {
-        return (
-            <View>
+
+        let content = (
+            <Animated.View style={[styles.searchButton, {
+                opacity: this.state.removeAnim,
+                transform: [{
+                    scale: this.state.removeAnim.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [10, 1]
+                    })
+                }]
+            }]}>
+                <TouchableOpacity onPress={this.onSearchButtonClick}>
+                    <View style={{ alignItems: 'center' }}>
+                        <Text style={styles.searchButtonText}>Find Places</Text>
+                    </View>
+                </TouchableOpacity>
+
+            </Animated.View>
+        );
+
+        if (this.state.hasPlaces) {
+            content = (
                 <PlaceList
                     places={this.props.places}
                     onItemSelected={this._placeSelectedHandler} />
+            )
+        }
+
+        return (
+            <View style={!this.state.hasPlaces ? styles.searchButtonContainer : null}>
+                {content}
             </View>
         );
-    } 
+    }
 }
+
+const styles = StyleSheet.create({
+    searchButtonContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    searchButton: {
+        borderColor: 'orange',
+        borderWidth: 1,
+        borderRadius: 40,
+        padding: 16,
+    },
+    searchButtonText: {
+        color: 'orange',
+        fontWeight: 'bold',
+        fontSize: 20,
+    }
+});
 
 const mapStateToProps = state => {
     return {
