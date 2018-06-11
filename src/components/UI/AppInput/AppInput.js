@@ -8,9 +8,10 @@ const appInput = (props) => (
             styles.container,
             props.style,
             !props.isValid && props.isTouched ? styles.invalidInput : null
-            //props.isValid || !props.isTouched ? null : styles.invalidInput
         ]}
         underlineColorAndroid='transparent'
+        autoCapitalize="none"
+        autoCorrect={false}
     />
 );
 
