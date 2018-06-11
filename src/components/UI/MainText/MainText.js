@@ -8,7 +8,8 @@ const mainText = props => (
 const styels = StyleSheet.create({
     container: {
         color: 'black',
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+        margin: 12
     }
 });
 

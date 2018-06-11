@@ -11,10 +11,21 @@ import {
 const bgButton = props => {
 
     const content = (
-        <View style={[styles.container, { backgroundColor: props.color }]}>
-            <Text style={{ color: props.textColor }}>{props.children}</Text>
+        <View style={[
+            styles.container,
+            { backgroundColor: props.color },
+            props.disabled ? styles.disabled : null
+        ]}>
+            <Text style={[
+                { color: props.textColor, fontSize: 18 },
+                props.disabled ? styles.disabledText : null
+            ]}>{props.children}</Text>
         </View>
     );
+
+    if (props.disabled) {
+        return content;
+    }
 
     if (Platform.OS === 'android') {
         return (
@@ -35,11 +46,19 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'transparent',
         margin: 4,
-        padding: 8,
+        padding: 10,
         borderRadius: 4,
-        borderColor: '#aaa',
+        borderColor: '#29aaf4',
         borderWidth: 1,
+    },
+    disabled: {
+        backgroundColor: '#eee',
+        borderColor: '#aaa'
+    },
+    disabledText: {
+        color: '#aaa'
     }
+
 });
 
 export default bgButton;

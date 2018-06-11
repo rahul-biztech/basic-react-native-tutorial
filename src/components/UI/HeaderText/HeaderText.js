@@ -11,7 +11,7 @@ const headerText = props => (
 const styles = StyleSheet.create({
     container: {
         fontSize: 28,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     }
 });
 

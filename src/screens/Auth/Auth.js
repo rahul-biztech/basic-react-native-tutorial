@@ -7,11 +7,38 @@ import MainText from '../../components/UI/MainText/MainText';
 
 import backgroundImage from '../../assets/bg_login.jpg';
 import BGButton from '../../components/UI/BGButton/BGButton';
+import validate from '../../utility/validation';
 
 class AuthScreen extends Component {
 
     state = {
-        isPortraitMode: true
+        isPortraitMode: true,
+        controls: {
+            email: {
+                value: '',
+                isValid: false,
+                validationRules: {
+                    isEmail: true
+                },
+                isTouched: false
+            },
+            password: {
+                value: '',
+                isValid: false,
+                validationRules: {
+                    minLength: 6
+                },
+                isTouched: false
+            },
+            confirmPassword: {
+                value: '',
+                isValid: false,
+                validationRules: {
+                    equalTo: 'password'
+                },
+                isTouched: false
+            },
+        }
     }
 
     constructor(props) {
@@ -19,7 +46,7 @@ class AuthScreen extends Component {
         Dimensions.addEventListener("change", this.onOrientationChanged);
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         Dimensions.removeEventListener("change", this.onOrientationChanged);
     }
 
@@ -31,6 +58,47 @@ class AuthScreen extends Component {
 
     _loginHandler = () => {
         startTabs();
+    }
+
+    onTextChangedListener = (key, value) => {
+        let connectedValue = {};
+        if (this.state.controls[key].validationRules.equalTo) {
+            const equalControl = this.state.controls[key].validationRules.equalTo;
+            const equalValue = this.state.controls[equalControl].value;
+            connectedValue = {
+                ...connectedValue,
+                equalTo: equalValue
+            }
+            //console.log("Connected Value: " + JSON.stringify(connectedValue));
+        }
+
+        if (key === 'password') {
+            connectedValue = {
+                ...connectedValue,
+                equalTo: value
+            };
+        }
+        this.setState(prevState => {
+            return {
+                controls: {
+                    ...prevState.controls,
+                    confirmPassword: {
+                        ...prevState.controls.confirmPassword,
+                        isValid: key === 'password'
+                            ? validate(prevState.controls.confirmPassword.value,
+                                prevState.controls.confirmPassword.validationRules,
+                                connectedValue)
+                            : prevState.controls.confirmPassword.isValid
+                    },
+                    [key]: {
+                        ...prevState.controls[key],
+                        value: value,
+                        isValid: validate(value, prevState.controls[key].validationRules, connectedValue),
+                        isTouched: true
+                    }
+                }
+            }
+        })
     }
 
     render() {
@@ -52,21 +120,48 @@ class AuthScreen extends Component {
 
                     <View style={styles.inputContainer}>
 
-                        <AppInput style={styles.input} placeholder="Your Email Address" />
+                        <AppInput
+                            style={styles.input}
+                            placeholder="Your Email Address"
+                            value={this.state.controls.email.value}
+                            isValid={this.state.controls.email.isValid}
+                            isTouched={this.state.controls.email.isTouched}
+                            onChangeText={(value) => this.onTextChangedListener("email", value)} />
 
                         <View style={this.state.isPortraitMode ? styles.portPasswordContainer : styles.landPasswordContainer}>
                             <View style={this.state.isPortraitMode ? styles.portPasswordWrapper : styles.landPasswordWrapper}>
-                                <AppInput style={styles.input} placeholder="Password" />
+                                <AppInput
+                                    style={styles.input}
+                                    placeholder="Password"
+                                    value={this.state.controls.password.value}
+                                    isValid={this.state.controls.password.isValid}
+                                    isTouched={this.state.controls.password.isTouched}
+                                    onChangeText={(value) => this.onTextChangedListener("password", value)} />
                             </View>
 
                             <View style={this.state.isPortraitMode ? styles.portPasswordWrapper : styles.landPasswordWrapper}>
-                                <AppInput style={styles.input} placeholder="Confirm Password" />
+                                <AppInput
+                                    style={styles.input}
+                                    placeholder="Confirm Password"
+                                    value={this.state.controls.confirmPassword.value}
+                                    isValid={this.state.controls.confirmPassword.isValid}
+                                    isTouched={this.state.controls.confirmPassword.isTouched}
+                                    onChangeText={(value) => this.onTextChangedListener("confirmPassword", value)} />
                             </View>
-
                         </View>
 
                     </View>
-                    <BGButton color='#29aaf4' textColor='white' onPress={this._loginHandler}>Submit</BGButton>
+                    <BGButton
+                        color='#29aaf4'
+                        textColor='white'
+                        onPress={this._loginHandler}
+                        disabled={
+                            !this.state.controls.email.isValid ||
+                            !this.state.controls.password.isValid ||
+                            !this.state.controls.confirmPassword.isValid
+                        }>
+                        Submit
+                    </BGButton>
                 </View>
             </ImageBackground>
         );
