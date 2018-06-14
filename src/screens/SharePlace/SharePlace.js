@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image } from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    Button,
+    StyleSheet,
+    ScrollView,
+    Image,
+    KeyboardAvoidingView
+} from 'react-native';
 
 import { connect } from 'react-redux';
 import { addPlace } from '../../store/actions/index';
@@ -51,7 +60,7 @@ class SharePlaceScreen extends Component {
     render() {
         return (
             <ScrollView>
-                <View style={styles.container}>
+                <KeyboardAvoidingView behavior='padding' style={styles.container}>
                     <MainText>
                         <HeaderText>Share a Place with us!</HeaderText>
                     </MainText>
@@ -67,7 +76,7 @@ class SharePlaceScreen extends Component {
                     <View style={styles.buttonContainer}>
                         <Button title='Share the Place!' onPress={this._placeAddedHandler} />
                     </View>
-                </View>
+                </KeyboardAvoidingView>
             </ScrollView>
         );
     }

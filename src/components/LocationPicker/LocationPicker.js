@@ -1,13 +1,41 @@
 import React, { Component } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, Dimensions } from 'react-native';
+import MapView from 'react-native-maps';
 
 class LocationPicker extends Component {
+
+    state = {
+        focusedLoaction: {
+            latitude: 23.0225,
+            longitude: 72.5714,
+            latitudeDelta: 0.0122,
+            longitudeDelta:
+                Dimensions.get('window').width / Dimensions.get('window').height * 0.0122
+        }
+    }
+
+    onCurrentLocationClick = () => {
+
+    }
+
+    pickLocationHandler = (event) => {
+        const coords = event.nativeEvent.coordinate;
+        this.setState(prevState => {
+            return {
+                focusedLoaction: {
+                    ...prevState
+                }
+            }
+        })
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.placeholder}>
-                    <Text>Map</Text>
-                </View>
+                <MapView
+                    initialRegion={this.state.focusedLoaction}
+                    style={styles.mapContainer}
+                    onPress={this.pickLocationHandler} />
 
                 <View style={styles.buttonContainer}>
                     <Button title='Locate Me' onPress={() => { }} />
@@ -22,12 +50,9 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
     },
-    placeholder: {
-        borderWidth: 1,
-        borderColor: 'black',
-        backgroundColor: '#eee',
-        width: '80%',
-        height: 200,
+    mapContainer: {
+        width: '100%',
+        height: 250,
     },
     buttonContainer: {
         marginTop: 8,
