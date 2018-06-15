@@ -7,6 +7,7 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case ADD_PLACE:
+        console.log(JSON.stringify(action.placeName) + " and " + JSON.stringify(action.location));
             return {
                 ...state,
                 places: state.places.concat({
@@ -14,7 +15,8 @@ const reducer = (state = initialState, action) => {
                     name: action.placeName,
                     image: {
                         uri: 'https://media-cdn.tripadvisor.com/media/photo-s/11/33/b5/8c/place-aux-merveilles.jpg'
-                    }
+                    },
+                    location: action.location
                 })
             };
 

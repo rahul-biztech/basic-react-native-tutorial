@@ -210,9 +210,10 @@ class AuthScreen extends Component {
                         textColor='white'
                         onPress={this._loginHandler}
                         disabled={
-                            !this.state.controls.email.isValid ||
-                            !this.state.controls.password.isValid ||
-                            !this.state.controls.confirmPassword.isValid && this.state.authMode === 'signup'
+                            false
+                            // !this.state.controls.email.isValid ||
+                            // !this.state.controls.password.isValid ||
+                            // !this.state.controls.confirmPassword.isValid && this.state.authMode === 'signup'
                         }>
                         Submit
                     </BGButton>

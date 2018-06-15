@@ -11,11 +11,12 @@ class LocationPicker extends Component {
             latitudeDelta: 0.0122,
             longitudeDelta:
                 Dimensions.get('window').width / Dimensions.get('window').height * 0.0122
-        }
+        },
+        locationChosen: true
     }
 
     onCurrentLocationClick = () => {
-
+        
     }
 
     pickLocationHandler = (event) => {
@@ -23,22 +24,61 @@ class LocationPicker extends Component {
         this.setState(prevState => {
             return {
                 focusedLoaction: {
-                    ...prevState
-                }
+                    ...prevState.focusedLoaction,
+                    latitude: coords.latitude,
+                    longitude: coords.longitude
+                },
+                locationChosen: true
             }
-        })
+        });
+        this.map.animateToRegion({
+            ...this.state.focusedLoaction,
+            latitude: coords.latitude,
+            longitude: coords.longitude
+        });
+
+        this.props.onPickLocation({
+            latitude: coords.latitude,
+            longitude: coords.longitude
+        });
+    }
+
+    getLocationHandler = () => {
+        navigator.geolocation.getCurrentPosition(pos => {
+            const coordsEvent = {
+                nativeEvent: {
+                    coordinate: {
+                        latitude: pos.coords.latitude,
+                        longitude: pos.coords.longitude
+                    }
+                }
+            };
+            this.pickLocationHandler(coordsEvent);
+        }, err => {
+            alert("Fetching the position failed, please pick one manually!");
+        });
     }
 
     render() {
+
+        let marker = null;
+        if (this.state.locationChosen) {
+            marker = <MapView.Marker coordinate={this.state.focusedLoaction} />
+        }
+
         return (
             <View style={styles.container}>
                 <MapView
                     initialRegion={this.state.focusedLoaction}
+                    region={this.state.focusedLoaction}
                     style={styles.mapContainer}
-                    onPress={this.pickLocationHandler} />
+                    onPress={this.pickLocationHandler}
+                    ref={ref => this.map = ref} >
+                    {marker}
+                </MapView>
 
                 <View style={styles.buttonContainer}>
-                    <Button title='Locate Me' onPress={() => { }} />
+                    <Button title='Locate Me' onPress={this.getLocationHandler} />
                 </View>
             </View>
         );
