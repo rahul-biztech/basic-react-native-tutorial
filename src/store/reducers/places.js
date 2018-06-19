@@ -13,9 +13,7 @@ const reducer = (state = initialState, action) => {
                 places: state.places.concat({
                     key: Math.random() + '',
                     name: action.placeName,
-                    image: {
-                        uri: 'https://media-cdn.tripadvisor.com/media/photo-s/11/33/b5/8c/place-aux-merveilles.jpg'
-                    },
+                    image: action.image,
                     location: action.location
                 })
             };

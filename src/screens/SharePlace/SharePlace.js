@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import { addPlace } from '../../store/actions/index';
 
 import PlaceInput from '../../components/PlaceInput/PlaceInput';
-import ImagePicker from '../../components/ImagePicker/ImagePicker';
+import PickImage from '../../components/PickImage/PickImage';
 import LocationPicker from '../../components/LocationPicker/LocationPicker';
 
 import MainText from '../../components/UI/MainText/MainText';
@@ -46,6 +46,10 @@ class SharePlaceScreen extends Component {
             location: {
                 value: null,
                 isValid: false
+            },
+            pickedImage:{
+                value: null,
+                isValid: false
             }
         }
     };
@@ -63,7 +67,8 @@ class SharePlaceScreen extends Component {
     _placeAddedHandler = () => {
         this.props.onAddPlace(
             this.state.controls.placeName.value,
-            this.state.controls.location.value
+            this.state.controls.location.value,
+            this.state.controls.pickedImage.value
         );
     }
 
@@ -97,6 +102,21 @@ class SharePlaceScreen extends Component {
         });
     }
 
+    imagePickHandler = (image) => {
+        console.log("Picked Image: "+JSON.stringify(image));
+        this.setState(prevState => {
+            return {
+                controls: {
+                    ...prevState.controls,
+                    pickedImage: {
+                        value: image,
+                        isValid: true
+                    }
+                }
+            }
+        })
+    }
+
     render() {
         return (
             <ScrollView>
@@ -105,7 +125,8 @@ class SharePlaceScreen extends Component {
                         <HeaderText>Share a Place with us!</HeaderText>
                     </MainText>
 
-                    <ImagePicker />
+                    <PickImage 
+                        onPickImage={this.imagePickHandler}/>
 
                     <LocationPicker
                         onPickLocation={this.locationPickedHandler} />
@@ -120,7 +141,8 @@ class SharePlaceScreen extends Component {
                             onPress={this._placeAddedHandler}
                             disabled={
                                 !this.state.controls.placeName.isValid ||
-                                !this.state.controls.location.isValid
+                                !this.state.controls.location.isValid ||
+                                !this.state.controls.pickedImage.isValid
                             } />
                     </View>
                 </KeyboardAvoidingView>
@@ -142,7 +164,7 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => {
     return {
-        onAddPlace: (placeName, location) => dispatch(addPlace(placeName, location))
+        onAddPlace: (placeName, location, pickedImage) => dispatch(addPlace(placeName, location, pickedImage))
     };
 };
 

@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { Modal, View, Button, Image, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import MapView from 'react-native-maps';
 import { connect } from 'react-redux';
-import { DELETE_PLACE } from '../../store/actions/actionTypes';
 import { deletePlace } from '../../store/actions';
 
 class PlaceDetial extends Component {
+
+    constructor(props){
+        super(props);
+        console.log("Location: "+JSON.stringify(this.props.selectedPlace));
+    }
 
     _placeDeleteHandler = () => {
         const key = this.props.selectedPlace.key;
@@ -19,14 +23,22 @@ class PlaceDetial extends Component {
             <View style={styles.container}>
                 <View>
                     <Image style={styles.placeImage} source={this.props.selectedPlace.image} />
+                    <MapView
+                        region={{
+                            latitude: this.props.selectedPlace.location.latitude,
+                            longitude: this.props.selectedPlace.location.longitude,
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421
+                        }}
+                        style={styles.mapContainer} />
                     <Text style={styles.placeName}> {this.props.selectedPlace.name} </Text>
                 </View>
                 <View style={styles.btnContainer}>
                     <TouchableOpacity onPress={this._placeDeleteHandler}>
-                        <Icon 
-                        name={Platform.OS === 'android' ? 'md-trash' : 'ios-trash'}
-                        size={30} 
-                        color={'red'} />
+                        <Icon
+                            name={Platform.OS === 'android' ? 'md-trash' : 'ios-trash'}
+                            size={30}
+                            color={'red'} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -49,7 +61,11 @@ const styles = StyleSheet.create({
     },
     btnContainer: {
         alignItems: 'center'
-    }
+    },
+    mapContainer: {
+        width: '100%',
+        height: 200,
+    },
 });
 
 const mapDispatchToProps = dispatch => {
