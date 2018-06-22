@@ -1,4 +1,6 @@
-export const ADD_PLACE = 'add_place';
-export const DELETE_PLACE = 'delete_place';
+export const SET_PLACES = 'set_places';
 
 export const TRY_AUTH = 'try_auth';
+
+export const UI_START_LOADING = 'start_loading';
+export const UI_STOP_LOADING = 'stop_loading';

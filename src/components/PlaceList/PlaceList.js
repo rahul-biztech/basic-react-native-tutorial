@@ -8,9 +8,9 @@ class PlaceList extends Component {
 
         const placeOutput = this.props.places.map((place, index) => {
             return <ListItem
-                key={index}
+                key={place.id}
                 placename={place}
-                onItemCliecked={() => { this.props.onItemSelected(index) }} />
+                onItemCliecked={() => this.props.onItemSelected(place.id)} />
         });
 
         return (
@@ -21,8 +21,10 @@ class PlaceList extends Component {
                     <ListItem
                         placename={info.item.name}
                         placeImage={info.item.image}
-                        onItemCliecked={() => { this.props.onItemSelected(info.item.key) }} />
-                )} />
+                        onItemCliecked={() => { this.props.onItemSelected(info.item.id) }} />
+                )}
+                keyExtractor={(info, index) => index + ""}
+            />
         );
     }
 }

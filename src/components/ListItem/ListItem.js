@@ -16,14 +16,15 @@ const styles = StyleSheet.create({
     listItem: {
         width: '100%',
         backgroundColor: '#eee',
-        marginBottom: 5,
+        marginHorizontal: 16,
+        marginVertical: 8,
         flexDirection: 'row',
         alignItems: 'center'
     },
     placeImage: {
         marginRight: 8,
-        width: 32,
-        height: 32
+        width: 48,
+        height: 48
     }
 })
 

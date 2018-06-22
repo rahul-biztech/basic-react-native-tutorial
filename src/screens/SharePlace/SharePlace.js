@@ -7,7 +7,8 @@ import {
     StyleSheet,
     ScrollView,
     Image,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    ActivityIndicator
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -47,7 +48,7 @@ class SharePlaceScreen extends Component {
                 value: null,
                 isValid: false
             },
-            pickedImage:{
+            pickedImage: {
                 value: null,
                 isValid: false
             }
@@ -103,7 +104,7 @@ class SharePlaceScreen extends Component {
     }
 
     imagePickHandler = (image) => {
-        console.log("Picked Image: "+JSON.stringify(image));
+        console.log("Picked Image: " + JSON.stringify(image));
         this.setState(prevState => {
             return {
                 controls: {
@@ -118,6 +119,22 @@ class SharePlaceScreen extends Component {
     }
 
     render() {
+
+        let submitButton = null;
+        if (this.props.isLoading) {
+            submitButton = <ActivityIndicator size="small" color="#00ff00" />
+
+        } else {
+            submitButton = <Button
+                title='Share the Place!'
+                onPress={this._placeAddedHandler}
+                disabled={
+                    !this.state.controls.placeName.isValid ||
+                    !this.state.controls.location.isValid ||
+                    !this.state.controls.pickedImage.isValid
+                } />
+        }
+
         return (
             <ScrollView>
                 <KeyboardAvoidingView behavior='padding' style={styles.container}>
@@ -125,8 +142,8 @@ class SharePlaceScreen extends Component {
                         <HeaderText>Share a Place with us!</HeaderText>
                     </MainText>
 
-                    <PickImage 
-                        onPickImage={this.imagePickHandler}/>
+                    <PickImage
+                        onPickImage={this.imagePickHandler} />
 
                     <LocationPicker
                         onPickLocation={this.locationPickedHandler} />
@@ -136,14 +153,7 @@ class SharePlaceScreen extends Component {
                         onTextChange={(value) => this.onTextChangeListener("placeName", value)} />
 
                     <View style={styles.buttonContainer}>
-                        <Button
-                            title='Share the Place!'
-                            onPress={this._placeAddedHandler}
-                            disabled={
-                                !this.state.controls.placeName.isValid ||
-                                !this.state.controls.location.isValid ||
-                                !this.state.controls.pickedImage.isValid
-                            } />
+                        {submitButton}
                     </View>
                 </KeyboardAvoidingView>
             </ScrollView>
@@ -162,10 +172,16 @@ const styles = StyleSheet.create({
     },
 });
 
+const mapStateToProps = state => {
+    return {
+        isLoading: state.ui.isLoading
+    };
+};
+
 const mapDispatchToProps = dispatch => {
     return {
         onAddPlace: (placeName, location, pickedImage) => dispatch(addPlace(placeName, location, pickedImage))
     };
 };
 
-export default connect(null, mapDispatchToProps)(SharePlaceScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(SharePlaceScreen);
